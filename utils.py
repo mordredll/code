@@ -6,36 +6,6 @@ import time
 from datetime import timedelta
 
 
-def split_kmer(text):
-    """把输入的碱基序列每三个为一组分词"""
-
-    inputs = []
-    for i in range(0, len(text), 3):
-        word = text[i:i+3]
-        inputs.append(word)
-    return inputs
-
-def load_vocab(vocab_file):
-    """Loads a vocabulary file into a dictionary."""
-    vocab = collections.OrderedDict()
-    index = 0
-    with open(vocab_file, "r") as reader:
-        while True:
-            token = reader.readline()
-            if not token:
-                break
-            token = token.strip()
-            vocab[token] = index
-            index += 1
-    return vocab
-vocab = load_vocab('/Users/xiaoxiaomo/PycharmProjects/virhost-classification/bert_pretrained/vocab.txt')
-def convert_seqs_to_ids(tokens):
-    """Converts a sequence of tokens into ids using the vocab."""
-    ids = []
-    for token in tokens:
-        ids.append(vocab[token])
-    return ids
-
 PAD, CLS = '[PAD]', '[CLS]'
 def load_dataset(file_path,config):
     """
@@ -46,18 +16,17 @@ def load_dataset(file_path,config):
     自己做 token 分词 ---课程5.10
     """
     contents = []
-    with open(file_path,'r') as f:
-
+    with open(file_path,'r',encoding='UTF-8') as f:
         for line in tqdm(f):
             line = line.strip()
             if not line:
                 continue
-            content,label = line.split(',')
-            token = split_kmer(content)
+            content,label = line.split('\t')
+            token = config.tokenizer.tokenize(content)
             token = [CLS]+token
             seq_len = len(token)
             mask = []
-            token_ids = convert_seqs_to_ids(token)
+            token_ids = config.tokenizer.convert_tokens_to_ids(token)
 
             pad_size = config.pad_size
             if pad_size:
