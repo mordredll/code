@@ -21,7 +21,7 @@ def load_dataset(file_path,config):
             line = line.strip()
             if not line:
                 continue
-            content,label = line.split('\t')
+            content,label = line.split(',')
             token = config.tokenizer.tokenize(content)
             token = [CLS]+token
             seq_len = len(token)
