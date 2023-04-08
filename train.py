@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import time
-import utils
+from codemy import utils
 from sklearn import metrics
 from pytorch_pretrained_bert import BertAdam
 from transformers import AlbertTokenizer, AlbertModel
